@@ -7,7 +7,7 @@ import requests
 import xlsxwriter
 
 from PIL import Image
-from streamlit_extras.badges import badge
+#from streamlit_extras.badges import badge
 
 def main():
     col1, col2, col3 = st.columns([0.05, 0.265, 0.035])
