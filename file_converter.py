@@ -5,11 +5,9 @@ import base64
 import io
 import requests
 import xlsxwriter
-import tabula.io
 
 from PIL import Image
-from Crypto.Cipher import AES
-#from streamlit_extras.badges import badge
+# from streamlit_extras.badges import badge
 
 def main():
     col1, col2, col3 = st.columns([0.05, 0.265, 0.035])
@@ -52,30 +50,36 @@ def pdf_to_xlsx():
     uploaded_file = st.file_uploader("Choose a PDF file", type=["pdf"])
 
     if uploaded_file is not None:
-        # Read PDF file into memory
-        pdf_bytes = uploaded_file.read()
-
-        # Decrypt PDF if necessary
-        if b'/Encrypt' in pdf_bytes:
-            password = st.text_input('Enter password for encrypted PDF:', type='password')
-            key = password[:32].encode('utf-8')
-            iv = b' ' * 16
-            cipher = AES.new(key, AES.MODE_CBC, iv)
-            pdf_bytes = cipher.decrypt(pdf_bytes)
-
         # Convert PDF to Excel
-        df = tabula.io.read_pdf(io.BytesIO(pdf_bytes), pages='all')
+        with st.spinner('Converting PDF to Excel...'):
+            # Create a PDF reader object
+            reader = PyPDF2.PdfReader(uploaded_file)
+
+            # Get the total number of pages in the PDF file
+            num_pages = len(reader.pages)
+
+            # Initialize a list to hold all the text data from the PDF file
+            text_data = []
+
+            # Loop through each page in the PDF file and extract the text data
+            for page_num in range(num_pages):
+                page = reader.pages[page_num]
+                page_text = page.extract_text()
+                text_data.append(page_text)
+
+            # Create a pandas DataFrame from the text data
+            df = pd.DataFrame(text_data, columns=['text'])
 
         # Download Excel file
         with st.spinner('Preparing download...'):
-            output_bytes = io.BytesIO()
-            writer = pd.ExcelWriter(output_bytes, engine='xlsxwriter')
-            df.to_excel(writer, index=False, sheet_name='Sheet1')
+            output = io.BytesIO()
+            writer = pd.ExcelWriter(output, engine = 'xlsxwriter')
+            df.to_excel(writer, sheet_name = 'Sheet1', index=False)
             writer.save()
-            output_bytes.seek(0)
-            b64 = base64.b64encode(output_bytes.read()).decode()
+            processed_data = output.getvalue()
+            b64 = base64.b64encode(processed_data).decode()
             href = f'<a href="data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,{b64}" download="output.xlsx">Download Excel file</a>'
-            st.markdown(href, unsafe_allow_html = True)
+            st.markdown(href, unsafe_allow_html=True)
 
 
 def txt_to_csv():
