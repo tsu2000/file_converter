@@ -5,7 +5,7 @@ import base64
 import io
 import requests
 import xlsxwriter
-import tabula
+import tabula.io
 
 from PIL import Image
 from Crypto.Cipher import AES
@@ -64,7 +64,7 @@ def pdf_to_xlsx():
             pdf_bytes = cipher.decrypt(pdf_bytes)
 
         # Convert PDF to Excel
-        df = tabula.read_pdf(io.BytesIO(pdf_bytes), pages='all')
+        df = tabula.io.read_pdf(io.BytesIO(pdf_bytes), pages='all')
 
         # Download Excel file
         with st.spinner('Preparing download...'):
