@@ -10,6 +10,7 @@ Any suggestion for different types of file conversions (that are widely used) is
 
 **Known limitations:**
 - Modules used may not be up-to-date, resulting in conversion errors.
+- Encrypted `.pdf` files cannot be processed. Check `.pdf` security settings before uploading.
 - Individual file size for `st.file_uploader` is limited to a maximum of **200MB**
 
 **Link to Web App**:
