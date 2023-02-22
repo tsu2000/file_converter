@@ -50,7 +50,7 @@ def main():
 def malxml_to_xlsx():
     st.markdown('### 📁 &nbsp; MyAnimeList (MAL) Exported XML to XLSX Converter')
 
-    st.markdown('Converts an exported MyAnimeList File (Anime List only) from an `.xml` file to a `.xlsx` format for greater readability. To get to the export page, click [**here.**](https://myanimelist.net/panel.php?go=export)')
+    st.markdown('Converts an exported MyAnimeList File from an `.xml` file to a `.xlsx` format for greater readability. Available for both exported anime and manga lists on MyAnimeList. To get to the export page, click [**here.**](https://myanimelist.net/panel.php?go=export)')
 
     # Upload PDF file
     uploaded_file = st.file_uploader("Upload", type=["xml"])
